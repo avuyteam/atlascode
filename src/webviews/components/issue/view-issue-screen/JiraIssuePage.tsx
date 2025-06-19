@@ -441,11 +441,10 @@ export default class JiraIssuePage extends AbstractIssueEditorPage<Emit, Accept,
                             <>
                                 {this.state.hierarchy.map((issue, index) => {
                                     const isLastItem = index === this.state.hierarchy.length - 1;
-                                    const isCurrentIssue = issue.key === this.state.key;
 
                                     // For the current issue (last item), always open in Jira
                                     // For parent issues, use the app navigation
-                                    const shouldOpenInJira = isCurrentIssue;
+                                    const shouldOpenInJira = issue.key === this.state.key;
                                     const handleItemClick = !shouldOpenInJira
                                         ? () =>
                                               this.handleOpenIssue({

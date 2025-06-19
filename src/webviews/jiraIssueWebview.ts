@@ -1,4 +1,5 @@
 import { EditIssueUI } from '@atlassianlabs/jira-metaui-client';
+import { JiraClient } from '@atlassianlabs/jira-pi-client';
 import {
     Comment,
     createEmptyMinimalIssue,
@@ -173,7 +174,7 @@ export class JiraIssueWebview
             this.postMessage(msg);
 
             // Start loading rest of the hierarchy in the background
-            this.fetchIssueHierarchy(this._issue.key, this._issue.siteDetails, client)
+            this.fetchIssueHierarchy(this._issue, this._issue.siteDetails, client)
                 .then((hierarchy) => {
                     // Sort hierarchy by key to ensure consistent order
                     hierarchy.sort((a, b) => a.key.localeCompare(b.key));
@@ -1029,19 +1030,11 @@ export class JiraIssueWebview
     }
 
     private async fetchIssueHierarchy(
-        issueKey: string,
+        currentIssue: MinimalIssue<DetailedSiteInfo>,
         siteDetails: DetailedSiteInfo,
-        client: any,
+        client: JiraClient<DetailedSiteInfo>,
     ): Promise<MinimalIssue<DetailedSiteInfo>[]> {
-        let currentIssue: MinimalIssue<DetailedSiteInfo> | undefined;
         try {
-            // Get the current issue with minimal fields
-            currentIssue = await fetchMinimalIssue(issueKey, siteDetails);
-            if (!currentIssue) {
-                Logger.error(new Error(`Failed to get current issue ${issueKey}`));
-                throw new Error(`Failed to get current issue ${issueKey}`);
-            }
-
             // Array to store all issues in hierarchy
             const hierarchyIssues: MinimalIssue<DetailedSiteInfo>[] = [currentIssue];
             const processedKeys = new Set<string>([currentIssue.key]);
@@ -1129,7 +1122,7 @@ export class JiraIssueWebview
 
             return hierarchyIssues;
         } catch (e) {
-            Logger.error(e, `Error fetching hierarchy for ${issueKey}`);
+            Logger.error(e, `Error fetching hierarchy for ${currentIssue.id}`);
             // Return at least the current issue if we can't get the full hierarchy
             return currentIssue ? [currentIssue] : [];
         }
