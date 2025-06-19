@@ -423,7 +423,6 @@ export default class JiraIssuePage extends AbstractIssueEditorPage<Emit, Accept,
 
     getMainPanelNavMarkup(): any {
         const itIconUrl = this.state.fieldValues['issuetype'] ? this.state.fieldValues['issuetype'].iconUrl : undefined;
-
         return (
             <div>
                 {this.state.showPMF && (

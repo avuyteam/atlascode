@@ -1113,13 +1113,6 @@ export class JiraIssueWebview
 
             // Start traversing up the hierarchy from the current issue
             await fetchAndUpdateParent(currentIssue);
-
-            if (hierarchyIssues.length === 0) {
-                const error = new Error(`No valid issues found in hierarchy`);
-                Logger.error(error);
-                throw error;
-            }
-
             return hierarchyIssues;
         } catch (e) {
             Logger.error(e, `Error fetching hierarchy for ${currentIssue.id}`);
