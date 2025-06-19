@@ -154,9 +154,7 @@ export class JiraIssueWebview
                         this._editUIData.fieldValues['parent'].key,
                         this._issue.siteDetails,
                     );
-                    if (parentIssue) {
-                        initialHierarchy.unshift(parentIssue);
-                    }
+                    initialHierarchy.unshift(parentIssue);
                 } catch (e) {
                     Logger.error(e, `Error fetching immediate parent for ${this._issue.key}`);
                 }
